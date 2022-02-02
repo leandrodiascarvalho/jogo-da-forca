@@ -1,0 +1,78 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300);
+
+:root{
+  --color-background-button:#fff;
+  --color-text-dark:#2c3e50;
+  --color-text-light:#ecf0f1;
+  --color-text-title:#1abc9c;
+  --color-text-success:#2ecc71;
+  --color-text-error:#c0392b;
+};
+
+*{
+padding:0;
+margin:0;
+vertical-align:baseline;
+list-style:none;
+border:0
+};
+
+html{
+font-family:'Open Sans', Arial, sans-serif; 
+height: 100%;
+font-size: 100%;
+text-size-adjust: 100%;
+-ms-text-size-adjust: 100%;
+overflow: hidden;
+position: relative;
+};
+
+body{
+height:100%;
+overflow: hidden; 
+font-size: 1em; 
+line-height: 1.4; 
+position: relative;
+};
+
+.btn{
+  min-width: 130px;
+  height: 40px;
+  color: var(--color-background-button);
+  padding: 5px, 10px; 
+};
+
+.rodape{
+font-size: 14em;
+}
+
+/* .css-button-retro--sky {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border: 1px solid #000;
+  color: #000;
+  background: transparent;
+}
+.css-button-retro--sky:hover:after {
+  top: 0;
+  left: 0;
+}
+.css-button-retro--sky:after {
+  content: "";
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  height: 100%;
+  top: 5px;
+  left: 5px;
+  transition: 0.2s;
+  background-color: #3a86ff;
+} */
