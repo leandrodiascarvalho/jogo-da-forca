@@ -5,37 +5,58 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./assets/css/style.css">
   <title>Jogo da Forca</title>
-  <link rel="stylesheet" type="texto/css" href="./css/style.css">
+
 </head>
 <body>
-  <!--inserir emoji no titulo-->
-<header id="cabecalho"> 
+  <header class="cabecalho">
+  <a href="#"><img src="assets\img\alura.svg" alt="logo da alura"></a>
   <h1 class="titulo">JOGO DA FORCA</h1>
-  <a href="#"><img src="#" alt=""></a>
-  <button class="btn" id="btn-start">Iniciar Jogo</button>
-<br>
-<br>
-</header>
-
-   <!--Input para entrada de texto -->
-<main class="input-texto">
-<section>
-  <form action="">
-   
-    <textarea contenteditable="auto" class="text-input" type="text"name="inputTexto" id="inputTexto" placeholder="Adicione uma palavra" autocomplete="off"></textarea>
-    <br>
-    <textarea contenteditable="auto" class="text-input" type="text" name="inputTexto" id="inputTexto" placeholder="Adicione uma dica " ></textarea>
-    <div class="button">
-    <!-- botão adiciona e Dica -->
-    <button class="btn" id="btn-adiciona">Adiciona</button>
-    <button class="btn" id="btn-dica">Dica!</button>
-    <div>
-  </form>
-    <canvas> </canvas>
+  </header>
   
-</section>
+<br>
+<br>
+  
+    <!-- botão para iniciar o Jogo-->
+    <div class = "button">
+      <button class="btn" id="play">Play</button>
+    </div>
+
+  <!--Input para entrada de texto -->
+<main class="input-texto">
+    <form action="">
+      <div class = "button">
+
+        <!--Adiciona palavras dica-->
+      <textarea contenteditable="auto" class="text-input" type="text"name="inputTexto" placeholder="Adicione uma dica" autocomplete="off"></textarea>
+
+        <!--Adiciona  dica-->
+      <textarea contenteditable="auto" class="text-input" type="text"name="inputTexto" placeholder="Adicione uma palavra" autocomplete="off"></textarea>
+      
+      <button class="btn" id="adiciona">Adiciona</button>
+      </div>
+      <br>
+     
+      <div>
+        <!--Input para adicionar uma letra -->
+        <label class="rotulo">letra:</label>
+        <input id="entradaLetra" type="text" class="entrada" size="1" maxlength="1" title="Informe uma letra">
+        <!--botão de tentativa -->
+        <button id="bntTentar" class="bnt" type="button" value="Tentar!" title="Clique aqui para usar sua letra">Tentar!</button>
+
+        <label class="rotulo">Palpite:</label>
+        <button class="btn" id="Enviar"></button>
+        <input type="text" id="inputReposta" >
+        <button id="meuclick">Enviar</button>
+      </div>
+      <br><br>
+      <canvas id="canvas" width="1200" height="800" style="border: 1px solid #000000;"></canvas>
+
+    
+  </form>
 </main>
+
  <footer class="rodape">
     <h3>Leandro Dias de Carvalho</h3>
     <div>
@@ -43,7 +64,8 @@
 <a href="#"><img src="./assets/img/linkedin-original.svg" alt= "logo do linkedin" height="50"width="50" ></a>
 <div> 
   </footer>
+  <script type="text/javascript" src="assets\js\canvas.js"></script>
+    <script type="text/javascript" src="assets/js/forca.js"></script>
 </body>
-<script type="text/javascript" src="./js/canvas.js"></script>
-<script type="text/javascript" src="./js/forca.js"></script>
+
 </html>
