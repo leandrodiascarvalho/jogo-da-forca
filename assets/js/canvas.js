@@ -96,8 +96,7 @@ function desenha_Boneco_Completo() {
 
 }
 
-function desenha_Area_Forca() {
-
+function desenhaAreaForca() {
 
   // PILAR LATERAL
   pincel.beginPath();
