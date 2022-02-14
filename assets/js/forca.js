@@ -1,168 +1,198 @@
-const palavraSecreta = [];
+/* Lista de palavras iniciais secretas para o começo do jogo */
 
-const canvas_Front = document.querySelector('.canvas_front');
-const pincel_Front = canvas_Front.getContext('2d');
+/* sera as variáveis e arrays para o funcionamento do programa */
+palavras = ['manga','cabeça','peixe','martelo','cavalo','basquete','futebol','tigre','campeonato','javascript']
+palavrasorteada = '';
+erros = 0;
+acertos = 0;
+letrascorretas = [];
+letraserradas = [];
+letrasdigitadas = [];
+letratempqtde = 0;
+addinit = false;
 
-const canvas = document.querySelector('.canvas'); //Canvas
-const pincel = canvas.getContext('2d'); // Pincel do Canvas
-const regex = new RegExp("^[A-Z]") // Letras Permitidas
+/* Evento adicionado ao botão iniciar jogo */
+var botaoIniciar = document.querySelector("#iniciar-jogo");
+botaoIniciar.addEventListener("click", function(){
+    event.preventDefault();
+    letrascorretas = []
+    letraserradas = []
+    acertos = 0;
+    erros = 0;
+    letrascorretas = [];
+    letraserradas = [];
+    letrasdigitadas = [];
+    palavrasorteada = sortearPalavra();
+    desenhaTela();
+    desenhaLinhas(palavrasorteada);
+    desenhaForca();
+    addinit = true;
+    return palavrasorteada;
+});
 
-// Seleção dos Elementos HTML
-const html_palavra_Sorteada = document.querySelector('.palavra_secreta');
-const html_msg = document.querySelector('.msg');
-const html_input = document.querySelector('#letra_Digitada');
-const html_chances = document.querySelector('.mostra_Chances');
-const html_Exibe_letras = document.querySelector(".Msg_Letra_digitadas");
+/* Evento adicionado ao botão de adicionar palavra*/
+var botaoAdicionar = document.querySelector("#nova-palavra");
+botaoAdicionar.addEventListener("click", function(){
+    event.preventDefault();
+    var campopalavra = document.querySelector("#input-nova-palavra");
+    var novapalavra = campopalavra.value;
+    palavras.push(novapalavra);
+    alert('Palavra '+novapalavra + ' adicionada!' );
+});
 
-html_chances.innerHTML = "TENTATIVAS: " + "[ " + chances + " ]";
-inicia_Game();
-
-function inicia_Game() {
-
-  lista_Digitadas = [];
-  lista_Letras = [];
-  pos = '';
-  chances = 6;
-  erro_Length = 2;
-  palavra_Sorteada = sorteia_Palavra();
-  desenha_Area_Forca();
-  recebe_Letra();
-  mostra_Palavra_Dica();
-  recebe_Letra();
-  console.log(palavra_Sorteada)
-}
-
-function sorteia_Palavra() {
-  html_palavra_Sorteada.innerHTML = '';
-  pos = Math.round(Math.random() * dados_P.length);
-  palavra_Sorteada = dados_P[pos].toUpperCase();
-
-  recebe_Letra();
-  mostra_Palavra_Dica();
-
-}
-
-function mostra_Palavra_Dica() {
-
-  html_palavra_Sorteada.innerHTML = "";
-
-  for (let i = 0; i < palavra_Sorteada.length; i++) {
-
-    if (lista_Letras[i] === undefined) {
-      lista_Letras[i] = "&nbsp;";
-      html_palavra_Sorteada.innerHTML = html_palavra_Sorteada.innerHTML + "<div class='Letra_secreta'>" + lista_Letras[i] + "</div>"
-
-    } else {
-      html_palavra_Sorteada.innerHTML = html_palavra_Sorteada.innerHTML + "<div class='Letra_secreta'>" + lista_Letras[i] + "</div>"
+/* Função que verifica se o jogo já terminou */
+function verificaFim(){
+    if (erros == 1){
+        desenhaCabeca();
     }
-  }
-}
-
-function recebe_Letra() {
-
-  html_input.addEventListener('keyup', (event) => {
-
-    let value = html_input.value;
-    html_msg.innerHTML = "";
-    if (event.key === "Enter") {
-      event.preventDefault();
-      verifica_Letra(value);
-
-      if (regex.test(value) === true) {
-
-        mostra_Palavra_Dica();
-      } else {
-        html_msg.innerHTML = "CARACTERES ESPECIAIS, LETRAS MINUSCULAS E NUMEROS NÃO SÃO PERIMITIDOS!";
-      }
-      html_input.value = "";
+    if (erros == 2){
+        desenhaTronco();
     }
-
-  });
+    if (erros == 3){
+        desenhaBracoEsq();
+    }
+    if (erros == 4){
+        desenhaBracoDir();
+    }
+    if (erros == 5){
+        desenhaPernaEsq();
+    }
+    if (erros == 6) {
+        desenhaPernaDir();
+        escreverPerdeu();
+    }
+    if (acertos >= letratempqtde) {
+        escreverGanhou();
+    }
 }
 
-function verifica_Letra(value) {
+/* Função que sorteia uma palavra aleatoriamente*/
+function sortearPalavra() {
+    qtdepalavras = palavras.length;
+    sorteiopalavras = Math.floor(Math.random() * qtdepalavras);
+    palavrasecreta = palavras[sorteiopalavras];
+    return palavrasecreta;
+}
 
-  let vitoria = true;
-  if (chances > 1) {
-
-    if (value.length > 1) {
-      erro_Length-- //TOTAL DE ERRO ACEITO 1 MSG 0
-      html_msg.innerHTML = 'DIGITE APENAS UMA LETRA, SE PERSISTIR SERÁ ERRO!';
-      html_input.value = '';
-
-      if (erro_Length === 0) {
-        chances--;
-        compara_Desenho();
-        html_chances.innerHTML = "TENTATIVAS: " + chances;
-        html_msg.innerHTML = 'ERRO CONTADO!'
-
-      }
-    } else if (palavra_Sorteada.indexOf(value, palavra_Sorteada) < 0) {
-      chances--;
-      compara_Desenho();
-      html_chances.innerHTML = "TENTATIVAS: " + chances;
-      lista_Digitadas += " [ " + value + " ] ";
-      html_Exibe_letras.innerHTML = lista_Digitadas;
-
-    } else {
-
-      for (let i = 0; i < palavra_Sorteada.length; i++) {
-        if (palavra_Sorteada[i].indexOf(value, palavra_Sorteada[i]) === 0) {
-          lista_Letras[i] = value;
-
+/* Função que verifica se a letra digitada está correta */
+function verificaLetra(letra){
+    var letratemp = palavrasorteada.split('');
+    letratempqtde = letratemp.length;
+    if (letrascorretas.includes(letra) == false && letraserradas.includes(letra) == false){
+        if (letratemp.includes(letra) == true){
+            for (var c = 0; c < letratempqtde; c++) {
+                if (letratemp[c] == letra) {
+                    escreverLetraCorreta(letra,c+1);
+                        letrascorretas.push(letra);
+                        acertos = acertos+1;
+                        verificaFim();
+                }
+            }
         }
-        if (palavra_Sorteada[i] != lista_Letras[i]) {
-          vitoria = false;
-
+        else {
+            escreverLetraErrada(letra,15);
+            letraserradas.push(letra);
+            erros = erros+1;
+            verificaFim();
         }
-      }
-
-      if (vitoria === true) {
-        html_msg.classList.toggle("msg_Ganhou");
-        html_msg.innerHTML = "PARABÉNS VOCÊ VENCEU!";
-
-      }
+    } else {
+        alert('Você já digitou esta letra!');
     }
-  } else {
-    chances = 0;
-    html_chances.innerHTML = "TENTATIVAS: " + chances;
-    compara_Desenho();
-    html_msg.innerHTML = "QUE PENA TENTE NOVAMENTE! A PALAVRA ERA: " + palavra_Sorteada;
-  }
-
 }
 
-function compara_Desenho() {
-
-  if (chances == 5) {
-    desenha_Cabeca();
-  } else if (chances == 4) {
-    desenha_Corpo();
-  } else if (chances == 3) {
-    desenha_Braco_Direito();
-  } else if (chances == 2) {
-    desenha_Braco_Esquerdo();
-  } else if (chances == 1) {
-    desenha_Perna_Direita();
-  } else if (chances == 0) {
-    desenha_Perna_Esquerda();
-  } else {
-    desenha_Boneco_Completo();
-  }
-
+function reiniciarJogo(){
+    var botaoReiniciar = document.querySelector('#iniciar-jogo');
+    botaoReiniciar.textContent = 'REINICIAR JOGO';
 }
 
-function adciona_Palavra() {
-
-  const input = document.querySelector("#nova_palavra");
-  const msg_addPalavra = document.querySelector(".msg_escolha");
-
-  input.addEventListener("keyup", (event) => {
-
-    if (event.key === "Enter") {
-      msg_addPalavra.innerHTML = 'PALAVRA ADCIONADA!'
-      input.value = '';
+/*Função que verifica se a tecla pressionada é uma letra*/
+document.addEventListener('keydown', function(event) {
+    if (addinit == true) {
+        /* console.log(event.keyCode); */
+        letra = false;
+        if(event.keyCode == 65){
+            letra = "a";
+        }
+        if(event.keyCode == 66){
+            letra = "b";
+        }
+        if(event.keyCode == 67){
+            letra = "c";
+        }
+        if(event.keyCode == 68){
+            letra = "d";
+        }
+        if(event.keyCode == 69){
+            letra = "e";
+        }
+        if(event.keyCode == 70){
+            letra = "f";
+        }
+        if(event.keyCode == 71){
+            letra = "g";
+        }
+        if(event.keyCode == 72){
+            letra = "h";
+        }
+        if(event.keyCode == 73){
+            letra = "i";
+        }
+        if(event.keyCode == 74){
+            letra = "j";
+        }
+        if(event.keyCode == 75){
+            letra = "k";
+        }
+        if(event.keyCode == 76){
+            letra = "l";
+        }
+        if(event.keyCode == 77){
+            letra = "m";
+        }
+        if(event.keyCode == 78){
+            letra = "n";
+        }
+        if(event.keyCode == 79){
+            letra = "o";
+        }
+        if(event.keyCode == 80){
+            letra = "p";
+        }
+        if(event.keyCode == 81){
+            letra = "q";
+        }
+        if(event.keyCode == 82){
+            letra = "r";
+        }
+        if(event.keyCode == 83){
+            letra = "s";
+        }
+        if(event.keyCode == 84){
+            letra = "t";
+        }
+        if(event.keyCode == 85){
+            letra = "u";
+        }
+        if(event.keyCode == 86){
+            letra = "v";
+        }
+        if(event.keyCode == 87){
+            letra = "w";
+        }
+        if(event.keyCode == 88){
+            letra = "x";
+        }
+        if(event.keyCode == 89){
+            letra = "y";
+        }
+        if(event.keyCode == 90){
+            letra = "z";
+        }
+        if(event.keyCode == 186){
+            letra = "ç";
+        }
+        if (letra !== false){
+            verificaLetra(letra);
+        }
     }
-  });
-}
-adciona_Palavra();
+});
